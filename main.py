@@ -75,7 +75,7 @@ all_posts = {
 
 
 # Get first N elements of everything for home
-N = 2
+N = 5
 blogs_home = dict(list(blogs.items())[0: N])
 tech_blogs_home = dict(list(tech_blogs.items())[0: N])
 projects_home = dict(list(projects.items())[0: N])
@@ -123,6 +123,12 @@ home_html = home_template.render(
     projects=projects_home_metadata,
     projects_tags=projects_home_tags,
 )
+
+# Remove all the files in docs folder
+
+filelist = [f for f in os.listdir("docs/")]
+for f in filelist:
+    os.remove(os.path.join("docs/", f))
 
 # Output the home file
 with open('docs/index.html', 'w') as file:
