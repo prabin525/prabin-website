@@ -128,7 +128,10 @@ home_html = home_template.render(
 
 filelist = [f for f in os.listdir("docs/")]
 for f in filelist:
-    os.remove(os.path.join("docs/", f))
+    if f == "CNAME":
+        pass
+    else:
+        os.remove(os.path.join("docs/", f))
 
 # Output the home file
 with open('docs/index.html', 'w') as file:
