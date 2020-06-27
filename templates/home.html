@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Home</h1>
+
+<div class="row">
+	
+	<div class="col-sm-6">
+	  <div class="card">
+		<div class="card-header">Latest</div>
+		{% for post in all_posts %}
+		<div class="card-body">
+			<h5 class="card-title">{{loop.index}}: <a href="{{ post.slug }}.html">{{post.title}}</a><small> {{post.date}}</small></h5>
+			<p class="card-text">{{post.summary}} <a href="{{ post.slug }}.html">read more...</a></p>
+		</div>
+		{%  endfor %}
+	  </div>
+	</div>
+
+	<div class="col-sm-6">
+		<div class="card">
+		  <div class="card-header">Tech Blogs</div>
+		  {% for post in tech_blogs %}
+		  <div class="card-body">
+			  <h5 class="card-title">{{loop.index}}: <a href="{{ post.slug }}.html">{{post.title}}</a><small> {{post.date}}</small></h5>
+			  <p class="card-text">{{post.summary}} <a href="{{ post.slug }}.html">read more...</a></p>
+		  </div>
+		  {%  endfor %}
+		</div>
+	  </div>
+</div>
+
+
+<div class="row">
+	
+	<div class="col-sm-6">
+	  <div class="card">
+		<div class="card-header">Blogs</div>
+		{% for post in blogs %}
+		<div class="card-body">
+			<h5 class="card-title">{{loop.index}}: <a href="{{ post.slug }}.html">{{post.title}}</a><small> {{post.date}}</small></h5>
+			<p class="card-text">{{post.summary}} <a href="{{ post.slug }}.html">read more...</a></p>
+		</div>
+		{%  endfor %}
+	  </div>
+	</div>
+
+	<div class="col-sm-6">
+		<div class="card">
+		  <div class="card-header">Projects</div>
+		  {% for post in projects %}
+		  <div class="card-body">
+			  <h5 class="card-title">{{loop.index}}: <a href="{{ post.slug }}.html">{{post.title}}</a><small> {{post.date}}</small></h5>
+			  <p class="card-text">{{post.summary}} <a href="{{ post.slug }}.html">read more...</a></p>
+		  </div>
+		  {%  endfor %}
+		</div>
+	  </div>
+</div>
+{% endblock %}
+
