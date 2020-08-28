@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container pt">
+    <div class="row mt">
+      <div class="col-lg-6 col-lg-offset-3 centered">
+        <h3>MY PROJECTS</h3>
+        <hr>
+      </div>
+    </div>
+    <div class="row mt centered">
+        {% for project in projects %}
+        <div class="col-lg-4">
+          <a href="{{project.slug}}.html"><img class="img-responsive" src="{{project.thumbnail}}" alt="" /></a>
+          <p>{{project.title}}</p>
+        </div>
+        {% endfor%}
+  </div>
+  <!-- /container -->
+
+</div>
+{% endblock %}
+

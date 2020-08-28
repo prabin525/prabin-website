@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="white">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+          <bd>{{post.date}}</bd>
+          <h4>{{post.title}}</h4>
+          <p><img class="img-responsive" src="{{post.thumbnail}}" alt=""></p>
+          <br>
+          {{post.content}}
+          <br>
+          <p>
+            <!-- <bt>TAGS: <a href="#">Wordpress</a> - <a href="#">Web Design</a></bt> -->
+          </p>
+          <hr>
+        </div>
+
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container -->
+  </div>
+
+{% endblock %}
+

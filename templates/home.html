@@ -2,61 +2,93 @@
 
 {% block content %}
 
-<h1>Home</h1>
+<div id="ww">
+	<div class="container">
+	  <div class="row">
+		<div class="col-lg-8 col-lg-offset-2 centered">
+		  <img src="img/user.png" alt="Stanley">
+		  <h1>Hi, I am Prabin!</h1>
+		  <p>Hello everybody. I'm Prabin. I work as a software engineer and teach various courses of computer science at under graduate level.
+			  I have a keen interest in Artificial Intelligence and Machine Learning.
+		  </p>
 
-<div class="row">
-	
-	<div class="col-sm-6">
-	  <div class="card">
-		<div class="card-header">Latest</div>
-		{% for post in all_posts %}
-		<div class="card-body">
-			<h5 class="card-title">{{loop.index}}: <a href="{{ post.slug }}.html">{{post.title}}</a><small> {{post.date}}</small></h5>
-			<p class="card-text">{{post.summary}} <a href="{{ post.slug }}.html">read more...</a></p>
 		</div>
-		{%  endfor %}
+		<!-- /col-lg-8 -->
 	  </div>
+	  <!-- /row -->
 	</div>
+	<!-- /container -->
+  </div>
+  <!-- /ww -->
 
-	<div class="col-sm-6">
-		<div class="card">
-		  <div class="card-header">Tech Blogs</div>
-		  {% for post in tech_blogs %}
-		  <div class="card-body">
-			  <h5 class="card-title">{{loop.index}}: <a href="{{ post.slug }}.html">{{post.title}}</a><small> {{post.date}}</small></h5>
-			  <p class="card-text">{{post.summary}} <a href="{{ post.slug }}.html">read more...</a></p>
-		  </div>
-		  {%  endfor %}
-		</div>
-	  </div>
+<div class="container pt">
+	<!-- /row -->
+
+  
+<h3>Latest Projects</h3>
+<hr>
+<div class="row mt centered">
+	{% for project in projects %}
+	<div class="col-lg-4">
+	  <a href="{{project.slug}}.html"><img class="img-responsive" src="{{project.thumbnail}}" alt="" /></a>
+	  <p>{{project.title}}</p>
+	</div>
+	{% endfor%}
 </div>
 
 
-<div class="row">
-	
-	<div class="col-sm-6">
-	  <div class="card">
-		<div class="card-header">Blogs</div>
-		{% for post in blogs %}
-		<div class="card-body">
-			<h5 class="card-title">{{loop.index}}: <a href="{{ post.slug }}.html">{{post.title}}</a><small> {{post.date}}</small></h5>
-			<p class="card-text">{{post.summary}} <a href="{{ post.slug }}.html">read more...</a></p>
-		</div>
-		{%  endfor %}
-	  </div>
-	</div>
 
-	<div class="col-sm-6">
-		<div class="card">
-		  <div class="card-header">Projects</div>
-		  {% for post in projects %}
-		  <div class="card-body">
-			  <h5 class="card-title">{{loop.index}}: <a href="{{ post.slug }}.html">{{post.title}}</a><small> {{post.date}}</small></h5>
-			  <p class="card-text">{{post.summary}} <a href="{{ post.slug }}.html">read more...</a></p>
-		  </div>
-		  {%  endfor %}
+
+<div class="row">
+	<h3>Latest Blogs</h3>
+	<hr>
+	{% for post in blogs %}
+	{% if loop.index % 2 == 1%}
+		<div id="grey">
+			<div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+				<p><img src="img/user.png" width="50px" height="50px">
+					<ba>Prabin</ba>
+				</p>
+				<p>
+					<bd>{{post.date}}</bd>
+				</p>
+				<h4>{{post.title}}</h4>
+				{{post.summary}}
+				<p><a href="{{ post.slug }}.html">Continue Reading...</a></p>
+				</div>
+		
+			</div>
+			<!-- /row -->
+			</div>
+			<!-- /container -->
 		</div>
-	  </div>
+	{%else%}
+	<div id="white">
+		<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2">
+			<p><img src="img/user.png" width="50px" height="50px">
+				<ba>Prabin</ba>
+			</p>
+			<p>
+				<bd>{{post.date}}</bd>
+			</p>
+			<h4>{{post.title}}</h4>
+			{{post.summary}}
+			<p><a href="{{ post.slug }}.html">Continue Reading...</a></p>
+			</div>
+	
+		</div>
+		<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	{%endif%}
+	{%  endfor %}
 </div>
+</div>
+
 {% endblock %}
 

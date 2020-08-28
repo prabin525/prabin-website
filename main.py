@@ -4,20 +4,29 @@ from markdown2 import markdown
 from jinja2 import Environment, PackageLoader
 
 
+# Remove all the files in docs folder
+
+filelist = [f for f in os.listdir("docs/")]
+NON_DELETE_FILES_FOLDER = [
+    "CNAME",
+    "css",
+    "img",
+    "js",
+    "lib"
+]
+for f in filelist:
+    if f in NON_DELETE_FILES_FOLDER:
+        pass
+    else:
+        os.remove(os.path.join("docs/", f))
+
+
 # Load Blogs
 blogs = {}
 for blog_post in os.listdir('content/blogs'):
     file_path = os.path.join('content/blogs/', blog_post)
     with open(file_path, 'r') as file:
         blogs[blog_post] = markdown(file.read(), extras=['metadata'])
-
-
-# Load Tech Blogs
-tech_blogs = {}
-for blog_post in os.listdir('content/tech_blogs'):
-    file_path = os.path.join('content/tech_blogs/', blog_post)
-    with open(file_path, 'r') as file:
-        tech_blogs[blog_post] = markdown(file.read(), extras=['metadata'])
 
 
 # Load Projects
@@ -27,9 +36,6 @@ for blog_post in os.listdir('content/projects'):
     with open(file_path, 'r') as file:
         projects[blog_post] = markdown(file.read(), extras=['metadata'])
 
-
-# Create a collection of all posts
-all_posts = {**blogs, **tech_blogs, **projects}
 
 # Sort Everything according to date
 
@@ -43,15 +49,6 @@ blogs = {
     )
 }
 
-tech_blogs = {
-    post: tech_blogs[post] for post in sorted(
-        tech_blogs,
-        key=lambda post: datetime.strptime(
-            tech_blogs[post].metadata['date'], '%Y-%m-%d'
-        ),
-        reverse=True
-    )
-}
 
 projects = {
     post: projects[post] for post in sorted(
@@ -63,93 +60,111 @@ projects = {
     )
 }
 
-all_posts = {
-    post: all_posts[post] for post in sorted(
-        all_posts,
-        key=lambda post: datetime.strptime(
-            all_posts[post].metadata['date'], '%Y-%m-%d'
-        ),
-        reverse=True
-    )
-}
-
 
 # Get first N elements of everything for home
 N = 5
 blogs_home = dict(list(blogs.items())[0: N])
-tech_blogs_home = dict(list(tech_blogs.items())[0: N])
 projects_home = dict(list(projects.items())[0: N])
-all_posts_home = dict(list(all_posts.items())[0: N])
+
 
 # Generate Templates
-
 env = Environment(loader=PackageLoader('main', 'templates'))
 home_template = env.get_template('home.html')
+blog_template = env.get_template('blog.html')
+project_template = env.get_template('projects.html')
 post_template = env.get_template('post.html')
+post_project_template = env.get_template('post_project.html')
+cv_template = env.get_template('cv.html')
 
 # Get metadatas and tags for home related
 
 blogs_home_metadata = [blogs_home[post].metadata for post in blogs_home]
 blogs_home_tags = [post['tags'] for post in blogs_home_metadata]
-
-tech_blogs_home_metadata = [
-    tech_blogs_home[post].metadata for post in tech_blogs_home
-    ]
-tech_blogs_home_tags = [
-    post['tags'] for post in tech_blogs_home_metadata
-    ]
-
 projects_home_metadata = [
     projects_home[post].metadata for post in projects_home
     ]
 projects_home_tags = [post['tags'] for post in projects_home_metadata]
 
-all_posts_home_metadata = [
-    all_posts_home[post].metadata for post in all_posts_home
-    ]
-all_posts_home_tags = [
-    post['tags'] for post in all_posts_home_metadata
-    ]
 
 # Render Home Template
 
 home_html = home_template.render(
-    all_posts=all_posts_home_metadata,
-    all_posts_tags=all_posts_home_tags,
     blogs=blogs_home_metadata,
     blogs_tags=blogs_home_tags,
-    tech_blogs=tech_blogs_home_metadata,
-    tech_blogs_tags=tech_blogs_home_tags,
     projects=projects_home_metadata,
     projects_tags=projects_home_tags,
 )
 
-# Remove all the files in docs folder
-
-filelist = [f for f in os.listdir("docs/")]
-for f in filelist:
-    if f == "CNAME":
-        pass
-    else:
-        os.remove(os.path.join("docs/", f))
-
-# Output the home file
 with open('docs/index.html', 'w') as file:
     file.write(home_html)
 
 
+# Render Project Listing Template
+
+projects_metadata = [projects[post].metadata for post in projects]
+projects_tags = [post['tags'] for post in projects_metadata]
+project_html = project_template.render(
+    projects=projects_metadata,
+    projects_tags=projects_tags,
+)
+
+with open('docs/projects.html', 'w') as file:
+    file.write(project_html)
+
+
+# Render Blog Listing Template
+
+blogs_metadata = [blogs[post].metadata for post in blogs]
+blogs_tags = [post['tags'] for post in blogs_metadata]
+blog_html = blog_template.render(
+    blogs=blogs_metadata,
+    blogs_tags=blogs_tags,
+)
+
+with open('docs/blog.html', 'w') as file:
+    file.write(blog_html)
+
+
+# CV page
+
+cv_html = cv_template.render()
+with open('docs/cv.html', 'w') as file:
+    file.write(cv_html)
+
 # Render all posts
 
-for post in all_posts:
-    post_metadata = all_posts[post].metadata
+for post in blogs:
+    post_metadata = blogs[post].metadata
 
     post_data = {
-        'content': all_posts[post],
+        'content': blogs[post],
         'title': post_metadata['title'],
         'date': post_metadata['date']
     }
 
     post_html = post_template.render(post=post_data)
+    post_file_path = 'docs/{slug}.html'.format(
+        slug=post_metadata['slug']
+    )
+
+    os.makedirs(os.path.dirname(post_file_path), exist_ok=True)
+    with open(post_file_path, 'w') as file:
+        file.write(post_html)
+
+
+# Render all Projects
+
+for post in projects:
+    post_metadata = projects[post].metadata
+
+    post_data = {
+        'content': projects[post],
+        'title': post_metadata['title'],
+        'date': post_metadata['date'],
+        'thumbnail': post_metadata['thumbnail']
+    }
+
+    post_html = post_project_template.render(post=post_data)
     post_file_path = 'docs/{slug}.html'.format(
         slug=post_metadata['slug']
     )
